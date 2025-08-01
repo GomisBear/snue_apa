@@ -81,53 +81,66 @@
   </div>
 
   <script>
-    function renderForm() {
-      const formArea = document.getElementById('formArea');
-      const type = document.getElementById('sourceType').value;
-      formArea.innerHTML = '';
-      if (type === 'book') {
-        formArea.innerHTML = `
-          <input placeholder="제목" id="title" />
-          <input placeholder="저자" id="author" />
-          <input placeholder="출판연도" id="year" />
-          <input placeholder="출판지 (예: 서울)" id="place" />
-          <input placeholder="출판사" id="publisher" />
-        `;
-      } else if (type === 'journal') {
-        formArea.innerHTML = `
-          <input placeholder="제목" id="title" />
-          <input placeholder="저자" id="author" />
-          <input placeholder="출판연도" id="year" />
-          <input placeholder="학술지명" id="journal" />
-          <input placeholder="권(호) (예: 18(2))" id="volume" />
-          <input placeholder="페이지 범위 (예: 45–67)" id="pages" />
-        `;
-      } else if (type === 'thesis') {
-        formArea.innerHTML = `
-          <input placeholder="제목" id="title" />
-          <input placeholder="저자" id="author" />
-          <input placeholder="연도" id="year" />
-          <input placeholder="논문 종류 (예: 박사학위논문)" id="type" />
-          <input placeholder="소속기관 (예: 단국대학교)" id="institution" />
-        `;
-      } else if (type === 'web') {
-        formArea.innerHTML = `
-          <input placeholder="문서 제목" id="title" />
-          <input placeholder="기관명 또는 저자명" id="author" />
-          <input placeholder="연도 또는 (n.d.)" id="year" />
-          <input placeholder="검색일 (예: 2025.08.01)" id="date" />
-        `;
-      } else if (type === 'news') {
-        formArea.innerHTML = `
-          <input placeholder="기사 제목" id="title" />
-          <input placeholder="기자명 또는 작성자" id="author" />
-          <input placeholder="연도" id="year" />
-          <input placeholder="언론사명" id="publisher" />
-          <input placeholder="검색일 (예: 2025.08.01)" id="date" />
-        `;
-      }
+  function renderForm() {
+    const formArea = document.getElementById('formArea');
+    const type = document.getElementById('sourceType').value;
+    formArea.innerHTML = '';
+
+    let formHTML = '';
+
+    if (type === 'book') {
+      formHTML = `
+        <input placeholder="제목" id="title" />
+        <input placeholder="저자" id="author" />
+        <input placeholder="출판연도" id="year" />
+        <input placeholder="출판지 (예: 서울)" id="place" />
+        <input placeholder="출판사" id="publisher" />
+      `;
+    } else if (type === 'journal') {
+      formHTML = `
+        <input placeholder="제목" id="title" />
+        <input placeholder="저자" id="author" />
+        <input placeholder="출판연도" id="year" />
+        <input placeholder="학술지명" id="journal" />
+        <input placeholder="권(호) (예: 18(2))" id="volume" />
+        <input placeholder="페이지 범위 (예: 45–67)" id="pages" />
+      `;
+    } else if (type === 'thesis') {
+      formHTML = `
+        <input placeholder="제목" id="title" />
+        <input placeholder="저자" id="author" />
+        <input placeholder="연도" id="year" />
+        <input placeholder="논문 종류 (예: 박사학위논문)" id="type" />
+        <input placeholder="소속기관 (예: 단국대학교)" id="institution" />
+      `;
+    } else if (type === 'web') {
+      formHTML = `
+        <input placeholder="문서 제목" id="title" />
+        <input placeholder="기관명 또는 저자명" id="author" />
+        <input placeholder="연도 또는 (n.d.)" id="year" />
+        <input placeholder="검색일 (예: 2025.08.01)" id="date" />
+      `;
+    } else if (type === 'news') {
+      formHTML = `
+        <input placeholder="기사 제목" id="title" />
+        <input placeholder="기자명 또는 작성자" id="author" />
+        <input placeholder="연도" id="year" />
+        <input placeholder="언론사명" id="publisher" />
+        <input placeholder="검색일 (예: 2025.08.01)" id="date" />
+      `;
     }
 
+    // 체크박스 UI 공통 추가
+    formHTML += `
+      <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 16px; margin-top: 10px;">
+        <input type="checkbox" id="isForeign" style="transform: scale(1.2);" />
+        <span style="margin-top: 2px;">해외 참고문헌</span>
+      </label>
+    `;
+
+    formArea.innerHTML = formHTML;
+  }
+</script>
     function generateAPA() {
       const type = document.getElementById('sourceType').value;
       const foreign = document.getElementById('isForeign').checked;
