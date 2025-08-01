@@ -140,40 +140,6 @@
 
     formArea.innerHTML = formHTML;
   }
-</script>
-    function generateAPA() {
-      const type = document.getElementById('sourceType').value;
-      const foreign = document.getElementById('isForeign').checked;
-      const get = id => document.getElementById(id)?.value || '';
-      let result = '';
-
-      const formatTitle = title => foreign ? `<em>${title}</em>` : `<strong>${title}</strong>`;
-      const formatAuthor = author => foreign ? author.replace(/,\s*&\s*/g, ' & ') : author;
-      const nameFormat = name => foreign ? name : name;
-
-      if (type === 'book') {
-        result = `${get('author')}(${get('year')}). ${formatTitle(get('title'))}. ${get('place')}: ${get('publisher')}.`;
-      } else if (type === 'journal') {
-        result = `${get('author')}(${get('year')}). ${get('title')}. ${formatTitle(get('journal'))}, ${get('volume')}, ${get('pages')}.`;
-      } else if (type === 'thesis') {
-        result = `${get('author')}(${get('year')}). ${get('title')}. ${get('type')}, ${get('institution')}.`;
-      } else if (type === 'web') {
-        result = `${get('author')}(${get('year')}). ${get('title')}. 검색일: ${get('date')}.`;
-      } else if (type === 'news') {
-        result = `${get('author')}(${get('year')}). ${get('title')}. ${get('publisher')}. 검색일: ${get('date')}.`;
-      }
-
-      document.getElementById('output').innerHTML = result;
-    }
-
-    function copyToClipboard() {
-      const el = document.createElement('textarea');
-      el.value = document.getElementById('output').innerText;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
-      alert('복사되었습니다!');
     }
   </script>
 </body>
