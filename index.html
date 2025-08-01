@@ -1,146 +1,159 @@
-<!-- layout adjusted 2025-08-02 -->
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>snue_apa - 서울교육대 APA 생성기</title>
+  <title>snue_apa 참고문헌 생성기</title>
   <style>
     body {
-      font-family: 'Noto Sans KR', sans-serif;
-      background-color: #f9f9f9;
-      color: #333;
-      margin: 0;
-      padding: 2rem;
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
     }
-    .container {
-      max-width: 700px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    h1, h2 {
-      text-align: center;
-    }
-    select, input, button, label {
-      font-size: 1rem;
-      padding: 0.5rem;
-      margin: 0.5rem 0;
+    input, select {
+      display: block;
       width: 100%;
-      box-sizing: border-box;
-    }
-    #outputContainer {
-      margin-top: 2rem;
-      background: #f1f1f1;
-      padding: 1rem;
-      border-radius: 0.5rem;
+      padding: 8px;
+      margin: 10px 0;
+      font-size: 16px;
     }
     #output {
-      font-size: 1rem;
       white-space: pre-wrap;
-      background: #fff;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-top: 20px;
+      background-color: #f9f9f9;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    label.inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 16px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>📚 SNUE APA 참고문헌 생성기</h1>
-    <p>서울교육대학교 대학원 기준에 맞춘 참고문헌 양식을 자동으로 생성합니다.</p>
+  <h1>snue_apa 참고문헌 생성기</h1>
 
-    <label for="sourceType">참고문헌 종류를 선택하세요:</label>
-    <select id="sourceType" onchange="renderForm()">
-      <option value="">-- 선택 --</option>
-      <option value="book">단행본</option>
-      <option value="journal">정기간행물</option>
-      <option value="thesis">학위논문</option>
-      <option value="web">인터넷 자료</option>
-      <option value="news">보도자료</option>
-    </select>
+  <label for="sourceType">출처 종류 선택:</label>
+  <select id="sourceType" onchange="renderForm()">
+    <option value="book">단행본</option>
+    <option value="journal">정기간행물</option>
+    <option value="thesis">학위논문</option>
+    <option value="web">인터넷 자료</option>
+    <option value="news">보도자료</option>
+  </select>
 
-   <div style="margin-top: 10px; margin-bottom: 10px;">
-  <label style="display: flex; align-items: center; gap: 6px; font-size: 16px;">
-    <input type="checkbox" id="isForeign" style="transform: scale(1.2);" />
-    <span style="margin-top: 2px;">해외 참고문헌</span>
-  </label>
-</div>
-      
-    <div id="formArea"></div>
-    <button onclick="generateAPA()">📄 APA 양식 생성</button>
+  <div id="formArea"></div>
 
-    <div id="outputContainer">
-      <h2>📋 생성된 참고문헌:</h2>
-      <div id="output"></div>
-      <button onclick="copyToClipboard()">복사하기</button>
-    </div>
-  </div>
+  <div id="output"></div>
+  <button onclick="generateAPA()">참고문헌 생성</button>
+  <button onclick="copyToClipboard()">복사하기</button>
 
   <script>
-  function renderForm() {
-    const formArea = document.getElementById('formArea');
-    const type = document.getElementById('sourceType').value;
-    formArea.innerHTML = '';
+    function renderForm() {
+      const formArea = document.getElementById('formArea');
+      const type = document.getElementById('sourceType').value;
+      formArea.innerHTML = '';
 
-    let formHTML = '';
+      let formHTML = '';
 
-    if (type === 'book') {
-      formHTML = `
-        <input placeholder="제목" id="title" />
-        <input placeholder="저자" id="author" />
-        <input placeholder="출판연도" id="year" />
-        <input placeholder="출판지 (예: 서울)" id="place" />
-        <input placeholder="출판사" id="publisher" />
+      if (type === 'book') {
+        formHTML = `
+          <input placeholder="제목" id="title" />
+          <input placeholder="저자" id="author" />
+          <input placeholder="출판연도" id="year" />
+          <input placeholder="출판지 (예: 서울)" id="place" />
+          <input placeholder="출판사" id="publisher" />
+        `;
+      } else if (type === 'journal') {
+        formHTML = `
+          <input placeholder="제목" id="title" />
+          <input placeholder="저자" id="author" />
+          <input placeholder="출판연도" id="year" />
+          <input placeholder="학술지명" id="journal" />
+          <input placeholder="권(호) (예: 18(2))" id="volume" />
+          <input placeholder="페이지 범위 (예: 45–67)" id="pages" />
+        `;
+      } else if (type === 'thesis') {
+        formHTML = `
+          <input placeholder="제목" id="title" />
+          <input placeholder="저자" id="author" />
+          <input placeholder="연도" id="year" />
+          <input placeholder="논문 종류 (예: 박사학위논문)" id="type" />
+          <input placeholder="소속기관 (예: 단국대학교)" id="institution" />
+        `;
+      } else if (type === 'web') {
+        formHTML = `
+          <input placeholder="문서 제목" id="title" />
+          <input placeholder="기관명 또는 저자명" id="author" />
+          <input placeholder="연도 또는 (n.d.)" id="year" />
+          <input placeholder="검색일 (예: 2025.08.01)" id="date" />
+        `;
+      } else if (type === 'news') {
+        formHTML = `
+          <input placeholder="기사 제목" id="title" />
+          <input placeholder="기자명 또는 작성자" id="author" />
+          <input placeholder="연도" id="year" />
+          <input placeholder="언론사명" id="publisher" />
+          <input placeholder="검색일 (예: 2025.08.01)" id="date" />
+        `;
+      }
+
+      // 공통 체크박스
+      formHTML += `
+        <label class="inline">
+          <input type="checkbox" id="isForeign" style="transform: scale(1.2);" />
+          <span style="margin-top: 2px;">해외 참고문헌</span>
+        </label>
       `;
-    } else if (type === 'journal') {
-      formHTML = `
-        <input placeholder="제목" id="title" />
-        <input placeholder="저자" id="author" />
-        <input placeholder="출판연도" id="year" />
-        <input placeholder="학술지명" id="journal" />
-        <input placeholder="권(호) (예: 18(2))" id="volume" />
-        <input placeholder="페이지 범위 (예: 45–67)" id="pages" />
-      `;
-    } else if (type === 'thesis') {
-      formHTML = `
-        <input placeholder="제목" id="title" />
-        <input placeholder="저자" id="author" />
-        <input placeholder="연도" id="year" />
-        <input placeholder="논문 종류 (예: 박사학위논문)" id="type" />
-        <input placeholder="소속기관 (예: 단국대학교)" id="institution" />
-      `;
-    } else if (type === 'web') {
-      formHTML = `
-        <input placeholder="문서 제목" id="title" />
-        <input placeholder="기관명 또는 저자명" id="author" />
-        <input placeholder="연도 또는 (n.d.)" id="year" />
-        <input placeholder="검색일 (예: 2025.08.01)" id="date" />
-      `;
-    } else if (type === 'news') {
-      formHTML = `
-        <input placeholder="기사 제목" id="title" />
-        <input placeholder="기자명 또는 작성자" id="author" />
-        <input placeholder="연도" id="year" />
-        <input placeholder="언론사명" id="publisher" />
-        <input placeholder="검색일 (예: 2025.08.01)" id="date" />
-      `;
+
+      formArea.innerHTML = formHTML;
     }
 
-    // 체크박스 UI 공통 추가
-    formHTML += `
-      <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 16px; margin-top: 10px;">
-        <input type="checkbox" id="isForeign" style="transform: scale(1.2);" />
-        <span style="margin-top: 2px;">해외 참고문헌</span>
-      </label>
-    `;
+    function generateAPA() {
+      const type = document.getElementById('sourceType').value;
+      const foreign = document.getElementById('isForeign')?.checked;
+      const get = id => document.getElementById(id)?.value || '';
+      let result = '';
 
-    formArea.innerHTML = formHTML;
-  }
+      const formatTitle = title => foreign ? `<i>${title}</i>` : title;
+      const formatAuthor = author => foreign ? author.replace(/,\s*&\s*/g, ' & ') : author;
+
+      if (type === 'book') {
+        result = `${get('author')}(${get('year')}). ${formatTitle(get('title'))}. ${get('place')}: ${get('publisher')}.`;
+      } else if (type === 'journal') {
+        result = `${get('author')}(${get('year')}). ${get('title')}. ${formatTitle(get('journal'))}, ${get('volume')}, ${get('pages')}.`;
+      } else if (type === 'thesis') {
+        result = `${get('author')}(${get('year')}). ${get('title')}. ${get('type')}, ${get('institution')}.`;
+      } else if (type === 'web') {
+        result = `${get('author')}(${get('year')}). ${get('title')}. 검색일: ${get('date')}.`;
+      } else if (type === 'news') {
+        result = `${get('author')}(${get('year')}). ${get('title')}. ${get('publisher')}. 검색일: ${get('date')}.`;
+      }
+
+      document.getElementById('output').innerHTML = result;
     }
+
+    function copyToClipboard() {
+      const el = document.createElement('textarea');
+      el.value = document.getElementById('output').innerText;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      alert('복사되었습니다!');
+    }
+
+    // 페이지 로딩 시 기본 렌더링
+    window.onload = renderForm;
   </script>
 </body>
 </html>
