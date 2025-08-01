@@ -61,11 +61,13 @@
       <option value="news">보도자료</option>
     </select>
 
-    <label><label style="display: inline-flex; align-items: center; gap: 6px;">
-  <input type="checkbox" id="isForeign" />
-  해외 참고문헌
-</label>
-
+    <label><div style="margin-top: 10px; margin-bottom: 10px;">
+  <label style="display: flex; align-items: center; gap: 6px;">
+    <input type="checkbox" id="isForeign" />
+    <span>해외 참고문헌</span>
+  </label>
+</div>
+      
     <div id="formArea"></div>
     <button onclick="generateAPA()">📄 APA 양식 생성</button>
 
