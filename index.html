@@ -23,7 +23,7 @@
     h1, h2 {
       text-align: center;
     }
-    select, input, button {
+    select, input, button, label {
       font-size: 1rem;
       padding: 0.5rem;
       margin: 0.5rem 0;
@@ -61,6 +61,8 @@
       <option value="news">보도자료</option>
     </select>
 
+    <label><input type="checkbox" id="isForeign"> 해외 참고문헌입니다</label>
+
     <div id="formArea"></div>
     <button onclick="generateAPA()">📄 APA 양식 생성</button>
 
@@ -78,37 +80,41 @@
       formArea.innerHTML = '';
       if (type === 'book') {
         formArea.innerHTML = `
-          <input placeholder="저자 (예: 홍길동)" id="author" />
-          <input placeholder="출판년도 (예: 2023)" id="year" />
-          <input placeholder="책 제목" id="title" />
+          <input placeholder="제목" id="title" />
+          <input placeholder="저자" id="author" />
+          <input placeholder="출판연도" id="year" />
+          <input placeholder="출판지 (예: 서울)" id="place" />
           <input placeholder="출판사" id="publisher" />
         `;
       } else if (type === 'journal') {
         formArea.innerHTML = `
-          <input placeholder="저자 (예: 홍길동, 김길동)" id="author" />
-          <input placeholder="출판년도" id="year" />
-          <input placeholder="논문 제목" id="title" />
+          <input placeholder="제목" id="title" />
+          <input placeholder="저자" id="author" />
+          <input placeholder="출판연도" id="year" />
           <input placeholder="학술지명" id="journal" />
           <input placeholder="권(호) (예: 18(2))" id="volume" />
           <input placeholder="페이지 범위 (예: 45–67)" id="pages" />
         `;
       } else if (type === 'thesis') {
         formArea.innerHTML = `
+          <input placeholder="제목" id="title" />
           <input placeholder="저자" id="author" />
-          <input placeholder="논문 제목" id="title" />
+          <input placeholder="연도" id="year" />
           <input placeholder="논문 종류 (예: 박사학위논문)" id="type" />
           <input placeholder="소속기관 (예: 단국대학교)" id="institution" />
         `;
       } else if (type === 'web') {
         formArea.innerHTML = `
+          <input placeholder="문서 제목" id="title" />
           <input placeholder="기관명 또는 저자명" id="author" />
-          <input placeholder="페이지 제목" id="title" />
+          <input placeholder="연도 또는 (n.d.)" id="year" />
           <input placeholder="검색일 (예: 2025.08.01)" id="date" />
         `;
       } else if (type === 'news') {
         formArea.innerHTML = `
-          <input placeholder="기자명 또는 작성자" id="author" />
           <input placeholder="기사 제목" id="title" />
+          <input placeholder="기자명 또는 작성자" id="author" />
+          <input placeholder="연도" id="year" />
           <input placeholder="언론사명" id="publisher" />
           <input placeholder="검색일 (예: 2025.08.01)" id="date" />
         `;
@@ -117,29 +123,37 @@
 
     function generateAPA() {
       const type = document.getElementById('sourceType').value;
+      const foreign = document.getElementById('isForeign').checked;
       const get = id => document.getElementById(id)?.value || '';
       let result = '';
 
+      const formatTitle = title => foreign ? `<em>${title}</em>` : `<strong>${title}</strong>`;
+      const formatAuthor = author => foreign ? author.replace(/,\s*&\s*/g, ' & ') : author;
+      const nameFormat = name => foreign ? name : name;
+
       if (type === 'book') {
-        result = `${get('author')}. (${get('year')}). **${get('title')}**. ${get('publisher')}.`;
+        result = `${get('author')}(${get('year')}). ${formatTitle(get('title'))}. ${get('place')}: ${get('publisher')}.`;
       } else if (type === 'journal') {
-        result = `${get('author')}. (${get('year')}). ${get('title')}. **${get('journal')}**, ${get('volume')}, ${get('pages')}.`;
+        result = `${get('author')}(${get('year')}). ${get('title')}. ${formatTitle(get('journal'))}, ${get('volume')}, ${get('pages')}.`;
       } else if (type === 'thesis') {
-        result = `${get('author')}. (${get('title')}). ${get('type')}, ${get('institution')}.`;
+        result = `${get('author')}(${get('year')}). ${get('title')}. ${get('type')}, ${get('institution')}.`;
       } else if (type === 'web') {
-        result = `${get('author')}. (${get('title')}). 검색일: ${get('date')}.`;
+        result = `${get('author')}(${get('year')}). ${get('title')}. 검색일: ${get('date')}.`;
       } else if (type === 'news') {
-        result = `${get('author')}. (${get('title')}). ${get('publisher')}. 검색일: ${get('date')}.`;
+        result = `${get('author')}(${get('year')}). ${get('title')}. ${get('publisher')}. 검색일: ${get('date')}.`;
       }
 
-      document.getElementById('output').innerText = result;
+      document.getElementById('output').innerHTML = result;
     }
 
     function copyToClipboard() {
-      const text = document.getElementById('output').innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        alert('복사되었습니다!');
-      });
+      const el = document.createElement('textarea');
+      el.value = document.getElementById('output').innerText;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      alert('복사되었습니다!');
     }
   </script>
 </body>
