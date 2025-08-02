@@ -41,15 +41,22 @@
       box-sizing: border-box;
     }
 
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
     .checkbox-row {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-top: 10px;
-      margin-bottom: 20px;
+      gap: 6px;
+      margin: 0;
     }
 
-    /* 체크박스 옆 텍스트용: 블록 라벨 오버라이드 */
+    /* 체크박스 옆 텍스트용 */
     .inline-label {
       display: inline-flex !important;
       align-items: center;
@@ -75,7 +82,6 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      margin-top: 10px;
     }
     .btn-primary:hover {
       background-color: #357ab8;
@@ -142,14 +148,15 @@
 
   <div id="formArea"></div>
 
-  <!-- 생성 버튼을 입력 바로 아래 -->
-  <button class="btn-primary" onclick="generateAPA()">참고문헌 생성</button>
-
-  <div class="checkbox-row">
-    <label for="isForeign" class="inline-label">
-      <input type="checkbox" id="isForeign" />
-      <span>해외 참고문헌</span>
-    </label>
+  <!-- 생성 버튼과 해외 참고문헌 체크박스를 한 줄로 -->
+  <div class="controls">
+    <button class="btn-primary" onclick="generateAPA()">참고문헌 생성</button>
+    <div class="checkbox-row">
+      <label for="isForeign" class="inline-label">
+        <input type="checkbox" id="isForeign" />
+        <span>해외 참고문헌</span>
+      </label>
+    </div>
   </div>
 
   <!-- 출력 + 복사 -->
